@@ -1,0 +1,13 @@
+{
+  "name": "presence-shield",
+  "version": "2.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test": "node --test tests/settings.test.js tests/presence.test.js tests/status.test.js",
+    "test:browser": "node tests/browser.test.cjs",
+    "demo": "node scripts/serve.cjs",
+    "pack": "powershell -NoProfile -File scripts/package.ps1"
+  }
+}

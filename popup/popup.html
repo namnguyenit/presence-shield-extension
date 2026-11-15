@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presence Shield</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+<header><div class="logo">P</div><div><h1>Presence Shield <span class="version">2.2</span></h1><p>Kiểm soát tín hiệu hoạt động của trang</p></div></header>
+<section id="application" class="application checking" role="status" aria-live="polite">
+  <div class="status-heading"><span class="status-dot"></span><strong id="applicationTitle">Đang kiểm tra trang…</strong></div>
+  <div id="host">—</div><p id="applicationDescription">Đang đọc trạng thái thực tế.</p>
+  <button id="refresh" class="text-button">Kiểm tra lại</button>
+</section>
+<div id="notice" role="status" aria-live="polite">Đang đọc cấu hình…</div>
+<main>
+<section id="compatibility" hidden>
+  <h2>Website yêu cầu API gốc?</h2>
+  <p class="compatibility-note">Đã áp dụng chỉ xác nhận tiện ích đã cài các lớp, không xác nhận website chấp nhận chúng. Trang kiểm tra API có thể từ chối hoạt động.</p>
+  <button id="restoreSite" class="secondary" disabled>Khôi phục API gốc và tải lại</button>
+  <small id="restoreScope">Tắt tiện ích cho tên miền này, rồi tải lại trang. Có thể mất dữ liệu chưa lưu. Quyền camera, chia sẻ màn hình và fullscreen sẽ do trình duyệt xử lý bình thường.</small>
+</section>
+<label class="switch main-switch"><span>Bật bảo vệ</span><input id="enabled" type="checkbox"></label>
+<section>
+  <label class="switch"><span>Giữ trang hiển thị và có focus<small>Đổi tab, chuyển ứng dụng, thu nhỏ cửa sổ</small></span><input id="presence" type="checkbox"></label>
+  <label class="switch"><span>Che lịch sử chuyển tab<small>Ẩn lịch sử visibility trong Performance API</small></span><input id="performance" type="checkbox"></label>
+  <label class="switch"><span>Fullscreen giả lập<small>Phủ vùng nội dung; Esc thu giao diện, giữ trạng thái ảo</small></span><input id="fullscreen" type="checkbox"></label>
+  <label class="switch"><span>Hạn chế tự loại bỏ tab<small>Không giữ được nhịp render khi trình duyệt đóng băng</small></span><input id="preventDiscard" type="checkbox"></label>
+</section>
+<details><summary>Các lớp bảo vệ mở rộng</summary>
+  <label class="switch"><span>Giữ trạng thái focus trong CSS<small>Các selector và stylesheet đọc được; có giới hạn</small></span><input id="focusCss" type="checkbox"></label>
+  <label class="switch"><span>Wake Lock ảo<small>Che việc lock bị thả; không giữ màn hình sáng thật</small></span><input id="wakeLock" type="checkbox"></label>
+  <label class="switch"><span>Idle Detection ảo<small>Trả active/unlocked; không đọc hoạt động hệ điều hành</small></span><input id="idle" type="checkbox"></label>
+  <label class="switch"><span>Pointer Lock ảo<small>Giữ trạng thái cho trang; không khóa chuột thật</small></span><input id="pointerLock" type="checkbox"></label>
+  <label class="switch"><span>Giới hạn thông tin màn hình<small>Che isExtended, từ chối đọc chi tiết màn hình</small></span><input id="screenInfo" type="checkbox"></label>
+  <label class="switch"><span>Che thông báo freeze/resume<small>Che thêm wasDiscarded; không ngăn đóng băng thật</small></span><input id="lifecycle" type="checkbox"></label>
+  <label class="switch"><span>Che con trỏ rời trang<small>Có thể ảnh hưởng menu và hành vi hover</small></span><input id="pointer" type="checkbox"></label>
+  <label class="switch"><span>Chặn camera và chia sẻ màn hình<small>Từ chối yêu cầu mới. Trang bắt buộc quyền có thể dừng hoạt động.</small></span><input id="capture" type="checkbox"></label>
+  <label class="switch"><span>Hạn chế theo dõi tương tác toàn trang<small>Chặn bộ nghe toàn trang, đọc clipboard bằng API và chuỗi Selection. Có thể ảnh hưởng editor/phím tắt.</small></span><input id="passiveEvents" type="checkbox"></label>
+  <label class="switch"><span>Tách BroadcastChannel giữa các trang<small>Giữ liên lạc trong cùng document; có thể ảnh hưởng đồng bộ đăng nhập và các tab.</small></span><input id="tabIsolation" type="checkbox"></label>
+  <label class="switch"><span>Cố định API kích thước và vị trí<small>Giữ số liệu lúc tải trang. CSS, DOM và ResizeObserver vẫn có thể đối chiếu; có thể ảnh hưởng bố cục.</small></span><input id="geometry" type="checkbox"></label>
+  <label class="switch"><span>Lọc thay đổi DOM riêng của tiện ích<small>Giữ bản ghi website, lọc marker/style và thao tác fullscreen riêng. Kiểm tra DOM trực tiếp vẫn có thể thấy.</small></span><input id="domPrivacy" type="checkbox"></label>
+  <button id="extended" class="secondary">Bật toàn bộ lớp mở rộng</button>
+</details>
+<section><div class="section-title"><h2>Các lớp trên trang hiện tại</h2></div><div id="layers"></div><div id="status">Đang kiểm tra…</div>
+  <button id="siteToggle" class="secondary" disabled>Đang đọc website…</button><small>Ngoại lệ theo tên miền; các iframe khác nguồn được kiểm tra riêng.</small>
+</section>
+<details><summary>Chặn địa chỉ theo dõi</summary>
+  <label class="switch"><span>Bật quy tắc mạng<small>Chỉ chặn các địa chỉ bạn thêm bên dưới</small></span><input id="network" type="checkbox"></label>
+  <label for="trackerUrls" class="field-label">Một URL mỗi dòng; thêm * ở cuối để chặn cả tiền tố</label>
+  <textarea id="trackerUrls" rows="4" spellcheck="false" placeholder="https://tracker.example/events*"></textarea>
+  <small>Chặn request có thể làm trang báo mất kết nối. Không giả dữ liệu gửi cho máy chủ.</small>
+  <button id="saveUrls" class="secondary">Lưu địa chỉ</button><p id="networkStatus"></p>
+</details>
+<details><summary>Giới hạn còn tồn tại</summary><ul id="limits"></ul><p>Đã áp dụng chỉ xác nhận các lớp đang bật trong khung đọc được. Website chủ động vẫn có thể kiểm tra API bị sửa; sự kiện giả có thể nhận diện được.</p></details>
+<details><summary>Chi tiết kiểm tra</summary><pre id="diagnostics"></pre></details>
+<div class="buttons"><button id="collapse" class="secondary">Thu fullscreen</button><button id="reset" class="secondary">Đặt lại fullscreen</button></div>
+<button id="reload">Tải lại trang để áp dụng</button><button id="test" class="text-button">Mở trang kiểm thử</button>
+</main><footer>Cấu hình được lưu trên thiết bị. Không gửi dữ liệu hoạt động ra ngoài.</footer>
+<script type="module" src="popup.js"></script></body></html>

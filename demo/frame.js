@@ -1,0 +1,2 @@
+document.getElementById("frame-fullscreen").addEventListener("click", () => document.getElementById("frame-stage").requestFullscreen());
+setInterval(() => { document.getElementById("frame-output").textContent = JSON.stringify({ hidden: document.hidden, visible: document.visibilityState, focus: document.hasFocus(), fullscreen: document.fullscreenElement?.id || null, events: window.probeEvents.slice(-5) }, null, 2); }, 300);
